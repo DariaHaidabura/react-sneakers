@@ -1,8 +1,14 @@
 import React from 'react';
 
-import Card from './components/Card/Card'
-import Header from './components/Card/Header'
+import Card from './components/Card'
+import Header from './components/Header'
 import Drawer from './components/Drawer/Drawer'
+
+const arr = [{
+  title: 'Мужские Кроссовки Nike Air Max 270' ,
+  price: 2599 ,
+  imageUrl:'/img/sneackers/1.jpg',
+}]
 
 function App() {
   return (
@@ -18,7 +24,14 @@ function App() {
        </div>
        </div>
        <div className="d-flex">
-      <Card/>
+         {arr.map((obj => 
+          <Card 
+          title={obj.title}
+          price={obj.price}
+          imageUrl={obj.imageUrl}
+          onClick={() => console.log(obj)} />
+          ))}
+      
      </div>
     </div>
     </div>
