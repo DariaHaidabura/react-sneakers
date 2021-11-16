@@ -1,31 +1,34 @@
 import React from 'react';
 
-function Drawer() {
-  return(
-    <div style={{display:'none'}} className="overlay">
-    <div className="drawer" >
-          <h2 className="d-flex justify-between mb-30 ">
-            Корзина
-          <img className="cu-p" src="/img/remove.svg" alt= "Canceled" /></h2>
-          
-            <div className="items">
-            <div className="cartItem d-flex aline-center">
-            <img 
-              className="mr-20"
-              idth={70}
-              height={70}
-              src="/img/sneackers/1.jpg"
-              alt="Img"
-            />
-            <div style={{ backgroundImage: 'url(/img/sneackers/1.svg)'}} className="cartItemImg">
+import styles from './Drawer.module.scss';
 
-            </div>
-            <div className="mr-20 flex">
-              <p className="mb-5">Мужские Кроссовки Nike Air Max 270</p>
-              <b>6000 грн.</b>
-            </div>
-            <img className="removeBtn" src="/img/remove.svg" alt= "Canceled" />
-          </div>
+function Drawer( { onClose, items = []} ) {
+  return(
+    <div className="overlay">
+      <div className="drawer" >
+          <h2 className="d-flex justify-between mb-30 ">
+            Корзина {' '}
+          <img onClick={onClose} src="/img/remove.svg" alt= "Canceled" />
+            </h2>
+            <div className="items">
+            {items.map((obj) => (
+                <div className="cartItem d-flex align-center mb-20">
+                  <div
+                    style={{ backgroundImage: `url(${obj.imageUrl})` }}
+                    className="cartItemImg"></div>
+
+                  <div className="mr-20 flex">
+                    <p className="mb-5">{obj.title}0</p>
+                    <b>{obj.price} грн.</b>
+                  </div>
+                  <img
+                    className="removeBtn"
+                    src="img/remove.svg"
+                    alt="Remove"
+                  />
+                </div>
+              ))}
+    
         </div>
 
             <div className="cartTotalBlock">
