@@ -44,8 +44,7 @@ header {
   }
 
   .greenButton {
-    width: 245px;
-    margin-top: 20px;
+    
 
     &:hover {
       img {
@@ -88,8 +87,8 @@ header {
 
 .cartTotalBlock {
   ul {
-    display: block;
-    margin-bottom: 40px !important;
+    margin-top: 265px !important;
+    margin-bottom: 0px;
 
     li {
       display: flex;
@@ -101,8 +100,9 @@ header {
         height: 1px;
         border-bottom: 1px dashed #dfdfdf;
         position: relative;
-        top: -4px;
+        top: -10px;
         margin: 0 7px;
+        margin-top:10px;
       }
     }
   }

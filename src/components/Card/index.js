@@ -10,6 +10,7 @@ function Card({
   onFavorite,
   onPlus,
   favorited = false,
+  plus=true
 }) {
   const [isAdded, setIsAdded] = React.useState(false);
   const [isFavorite, setIsFavorite] = React.useState(favorited);
@@ -40,12 +41,12 @@ function Card({
           <span>Цена:</span>
           <b>{price} грн</b>
         </div>
-        <img
+        {plus && <img
           className={styles.plus}
           onClick={onClickPlus}
           src={isAdded ? "img/btn-checked.svg" : "img/btn-plus.svg"}
           alt="Plus"
-        />
+        />}
       </div>
     </div>
   );

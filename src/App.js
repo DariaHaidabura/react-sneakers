@@ -3,10 +3,11 @@ import axios from "axios";
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Drawer from "./components/Drawer/Drawer";
-
 import Favorites from "./pages/Favorites";
 import Home from "./pages/Home";
 import Orders from "./pages/Orders";
+import useCart from "./hooks/useCart"
+import AppContext from './context';
 
 function App() {
   const [items, setItems] = React.useState([]);
@@ -17,29 +18,51 @@ function App() {
 
   React.useEffect(() => {
     axios
-      .get("https://61c1e02e9dbcca0017c821f7.mockapi.io/items")
+      .get("http://localhost:3004/items")
       .then((res) => {
         setItems(res.data);
       });
     axios
-      .get("https://61c1e02e9dbcca0017c821f7.mockapi.io/cart")
+      .get("http://localhost:3004/cart")
       .then((res) => {
         setCartItems(res.data);
       });
     axios
-      .get("https://61c1e02e9dbcca0017c821f7.mockapi.io/favorites")
+      .get("http://localhost:3004/favorites")
       .then((res) => {
         setFavorites(res.data);
       });
   }, []);
 
-  const onAddToCart = (obj) => {
-    axios.post("https://61c1e02e9dbcca0017c821f7.mockapi.io/cart", obj);
-    setCartItems((prev) => [...prev, obj]);
+  const onAddToCart = async (obj) => {
+    try {
+      const findItem = cartItems.find((item) => Number(item.parentId) === Number(obj.id));
+      if (findItem) {
+        setCartItems((prev) => prev.filter((item) => Number(item.parentId) !== Number(obj.id)));
+        await axios.delete(`http://localhost:3004/cart/${findItem.id}`);
+      } else {
+        setCartItems((prev) => [...prev, obj]);
+        const { data } = await axios.post('http://localhost:3004/cart', obj);
+        setCartItems((prev) =>
+          prev.map((item) => {
+            if (item.parentId === data.parentId) {
+              return {
+                ...item,
+                id: data.id,
+              };
+            }
+            return item;
+          }),
+        );
+      }
+    } catch (error) {
+      alert('Ошибка при добавлении в корзину');
+      console.error(error);
+    }
   };
 
   const onRemoveItem = (id) => {
-    axios.delete(`https://61c1e02e9dbcca0017c821f7.mockapi.io/cart/${id}`);
+    axios.delete(`http://localhost:3004/cart/${id}`);
     setCartItems((prev) =>
       prev.filter((item) => Number(item.id) !== Number(id))
     );
@@ -49,11 +72,11 @@ function App() {
     try {
       if (favorites.find((favObj) => favObj.id === obj.id)) {
         axios.delete(
-          `https://61c1e02e9dbcca0017c821f7.mockapi.io/favorites/${obj.id}`
+          `http://localhost:3004/favorites/${obj.id}`
         );
       } else {
         const { data } = await axios.post(
-          "https://61c1e02e9dbcca0017c821f7.mockapi.io/favorites",
+          "http://localhost:3004/favorites",
           obj
         );
         setFavorites((prev) => [...prev, data]);
@@ -67,18 +90,31 @@ function App() {
     setSearchValue(event.target.value);
   };
 
+  const toggleOpened = () => {
+    setCartOpened(!cartOpened)
+  }
+
   return (
+    <AppContext.Provider
+    value={{
+      items,
+      cartItems,
+      favorites,
+      onAddToFavorite,
+      onAddToCart,
+      setCartOpened,
+      setCartItems,
+    }}>
     <div className="wrapper clear">
-      {cartOpened && (
         <Drawer
           items={cartItems}
           onClose={() => setCartOpened(false)}
-          onRemove={onRemoveItem}
+          onRemoveItem={onRemoveItem}
           opened={cartOpened}
+          toggleOpened={toggleOpened}
         />
-      )}
 
-      <Header onClickCart={() => setCartOpened(true)} />
+      <Header onClickCart={() => setCartOpened(true)}/>
       <Routes>
         <Route
           path="/"
@@ -102,9 +138,10 @@ function App() {
             <Favorites items={favorites} onAddToFavorite={onAddToFavorite} />
           }
         />
-        <Route path="/orders" exact element={<Orders />} />
+      <Route path="/orders" exact element={<Orders items={items} />} />
       </Routes>
     </div>
+    </AppContext.Provider>
   );
 }
 
