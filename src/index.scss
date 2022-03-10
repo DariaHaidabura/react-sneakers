@@ -19,6 +19,7 @@ body {
 
 header {
   border-bottom: 1px solid #eaeaea;
+
   img {
     margin-right: 15px;
   }
@@ -44,7 +45,7 @@ header {
   }
 
   .greenButton {
-    
+
 
     &:hover {
       img {
@@ -102,7 +103,7 @@ header {
         position: relative;
         top: -10px;
         margin: 0 7px;
-        margin-top:10px;
+        margin-top: 10px;
       }
     }
   }
@@ -194,9 +195,11 @@ header {
   0% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.7;
   }
+
   100% {
     opacity: 1;
   }

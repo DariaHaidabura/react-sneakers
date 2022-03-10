@@ -1,10 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { useCart } from '../hooks/useCart';
+import { useCart } from "../hooks/useCart";
 
-
-function Header({onClickCart}) {
+function Header({ onClickCart }) {
   const { totalPrice } = useCart();
   return (
     <header className="d-flex justify-between align-center p-40">
